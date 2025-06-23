@@ -1,0 +1,499 @@
+/* static/css/style.css - FINAL VERSION */
+
+/* --- DYNAMIC ANIMATED GRADIENT BACKGROUND --- */
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0 40px; /* Adjusted padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* Background setup */
+    background-image: url('../images/home_background.png'); /* Your new background */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+
+    /* Ensure body takes full height */
+    min-height: 100vh;
+}
+
+
+
+/* --- HEADER AND GLOWING TITLE --- */
+.hub-header {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px 0;
+    margin-bottom: 20px; /* Reduced space below header */
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    position: relative;
+}
+
+.persona-logo {
+    width: 70px;
+    height: auto;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.hub-header h1 {
+    font-size: 4.5em;
+    color: #FF0055;
+    margin: 2px;
+    text-shadow: 0 0 8px rgba(255, 0, 85, 0.4), 
+                 0 0 15px rgba(255, 0, 85, 0.3);
+
+    -webkit-user-select: none; /* For Safari */
+    -moz-user-select: none;    /* For Firefox */
+    -ms-user-select: none;     /* For Internet Explorer/Edge */
+    user-select: none;         /* Standard syntax */
+}
+
+.hub-header p {
+    display: none; 
+}
+
+/* --- PERSONALITY CARDS WITH AVATARS (MODIFIED SECTION) --- */
+.personality-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Changed to a 4-card layout */
+    gap: 20px; /* Adjusted gap */
+    max-width: 1000px; /* Increased max-width for 4 cards */
+}
+
+.personality-card {
+    background: rgba(30, 30, 30, 0.6); 
+    backdrop-filter: blur(5px);
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px 15px; /* Adjusted padding */
+    text-align: center;
+    text-decoration: none;
+    color: #e0e0e0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* Flexbox for perfect centering */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px; /* Set a consistent height */
+}
+
+.personality-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(255, 46, 46, 0.25);
+    border-color: #E62E2E;
+}
+
+/* New style for the avatars on the cards */
+.card-avatar {
+    width: 55px; /* Adjusted size */
+    height: 55px; /* Adjusted size */
+    border-radius: 50%;
+    border: 2px solid #00aaff;
+    margin-bottom: 15px;
+}
+
+.personality-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5em; /* Adjusted size */
+    color: #00aaff;
+    margin: 0; /* Removed all margins */
+}
+
+.personality-card p {
+    display: none; /* This hides the description text */
+}
+
+
+/* --- CHAT PAGE STYLES (from before, no changes needed) --- */
+.chat-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.chat-container {
+    width: 90%;
+    max-width: 800px;
+    height: 90vh;
+    background: rgba(18, 18, 18, 0.65);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.chat-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+.chat-header {
+    padding: 15px 20px; /* Adjusted padding from a previous step */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* This keeps the H1 title centered */
+    position: relative;
+}
+
+.back-link {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 80%;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.message-text {
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.6;
+}
+
+.user-message {
+    align-self: flex-end;
+    flex-direction: row-reverse; /* Puts avatar on the right */
+}
+
+.user-message .message-text {
+    background-color: #0088cc;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+}
+
+.ai-message {
+    align-self: flex-start;
+}
+
+.ai-message .message-text {
+    background-color: #333;
+    color: #e0e0e0;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-footer {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#message-form {
+    display: flex;
+}
+
+#user-input {
+    flex-grow: 1;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: #fff;
+    font-size: 1em;
+}
+
+#message-form button {
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: filter 0.2s ease;
+}
+
+#message-form button:hover {
+    filter: brightness(85%);
+}
+
+.typing-indicator {
+    padding: 0 20px 10px;
+    display: flex; /* Ensure it's a flex container */
+    align-items: center; /* Vertically align the dots */
+    gap: 4px; /* Space between dots */
+    height: 20px; /* Give it some height */
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #777;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+.typing-indicator span:nth-of-type(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-of-type(2) { animation-delay: -0.16s; }
+.typing-indicator span:nth-of-type(3) { animation-delay: 0; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
+
+/* Code Block Styling */
+.code-block-container {
+    position: relative;
+    margin: 10px 0;
+}
+
+.code-block-container pre {
+    border-radius: 8px;
+    padding-top: 35px !important;
+}
+
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    background-color: #555;
+    color: #eee;
+    border: 1px solid #777;
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.copy-button:hover {
+    background-color: #666;
+}
+
+/* --- NEW: Chat Page Home Logo Link --- */
+.home-logo-link {
+    position: absolute; /* Allows precise positioning inside the header */
+    left: 20px;         /* Pins it 20px from the left edge */
+    top: 50%;           /* Aligns its top to the vertical middle... */
+    transform: translateY(-50%); /* ...and this perfectly centers it. */
+    line-height: 0;     /* Removes any extra spacing around the image */
+}
+
+.home-logo-link img {
+    height: 35px; /* Control the height of the logo */
+    width: auto;
+}
+
+/* --- NEW: Info Button and Modal Styles --- */
+
+/* The Info button in the header */
+
+.info-button {
+    position: fixed;      /* <-- This is the key change to stick it to the window */
+    bottom: 30px;         /* <-- Position from the bottom */
+    right: 30px;          /* <-- Position from the right */
+    z-index: 99;          /* Ensures it stays on top of other content */
+    
+    background-color: rgba(30, 30, 30, 0.5); /* Made it slightly darker */
+    backdrop-filter: blur(5px); /* Added frosted glass effect */
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 50%;
+    width: 24px;          /* Made it a little bigger */
+    height: 24px;         /* Made it a little bigger */
+    font-size: 0.8em;       /* Made the 'i' bigger */
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.info-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+/* The dark background behind the modal */
+.modal-backdrop {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stays in place */
+    z-index: 100; /* On top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+/* The actual pop-up window */
+.modal-content {
+    background: #2c2c2c;
+    padding: 25px 35px;
+    border: 1px solid #555;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.4s ease;
+    color: #e0e0e0; /* Set text color for the modal */
+}
+
+/* The 'X' close button */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    color: #00aaff;
+    margin-top: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.modal-content p {
+    font-family: sans-serif;
+    line-height: 1.6;
+}
+
+.modal-content hr {
+    border: 0;
+    height: 1px;
+    background: #444;
+    margin: 20px 0;
+}
+
+.modal-footer {
+    font-size: 0.9em;
+    text-align: center;
+    color: #888;
+}
+
+/* This class will be toggled by JavaScript to show the modal */
+.modal-visible {
+    display: flex;
+}
+
+/* Keyframe animations for the modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- NEW: Feedback Button Styles --- */
+
+.feedback-container {
+    margin-top: 8px;
+    opacity: 0.5; /* Buttons are subtle by default */
+    transition: opacity 0.3s ease;
+}
+
+.message-text:hover .feedback-container {
+    opacity: 1; /* Buttons become fully visible on hover */
+}
+
+.feedback-button {
+    background: none;
+    border: 1px solid #555;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.feedback-button:hover {
+    background: #444;
+    border-color: #777;
+}
+
+.feedback-container.voted .feedback-button {
+    opacity: 0.5;
+    cursor: not-allowed; /* Show that it can't be clicked again */
+}
+
+.feedback-container .feedback-button.selected {
+    opacity: 1;
+    border-color: #00aaff; /* Highlight the selected button */
+    transform: scale(1.1);
+}
+
+/* --- NEW: Feedback Thank You Message Styles --- */
+
+.feedback-thanks-message {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #888;
+    font-style: italic;
+    animation: fadeIn 0.5s ease;
+}
+
+.feedback-thanks-message.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+/* Keyframe animation for the fade-out effect */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

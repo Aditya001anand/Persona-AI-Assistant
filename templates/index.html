@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="hub-header">
+    <h1>Persona</h1>
+    <img src="{{ url_for('static', filename='images/persona_logo.png') }}" alt="Persona Logo" class="persona-logo">
+
+    <button id="info-button" class="info-button" title="About this Project">i</button>
+</header>
+
+ <main class="personality-selector">
+        
+    {% for key, details in personalities.items() %}
+        <a href="/chat?personality={{ key }}" class="personality-card">
+            <img src="{{ url_for('static', filename=details.avatar_image) }}" alt="{{ details.name }} Avatar" class="card-avatar">
+            
+            <h2>{{ details.name }}</h2>
+            
+        </a>
+    {% endfor %}
+
+</main>
+<div id="about-modal-backdrop" class="modal-backdrop">
+    <div class="modal-content">
+        <span id="close-modal-button" class="close-button">&times;</span>
+        <h2>About Persona</h2>
+        <p><strong>Persona</strong> is an interactive web application designed to showcase the power and creativity of large language models through advanced prompt engineering.</p>
+        <p>This project is powered by Google's cutting-edge <strong>Gemini AI</strong>. Each personality you see has a unique set of instructions that guides the AI's tone, style, and responses, demonstrating how context can create vastly different conversational experiences.</p>
+        <hr>
+        <p class="modal-footer">A Project for Prompt Engineering by Aditya Anand</p>
+    </div>
+</div>
+<script>
+    // Get the elements we need to interact with
+    const infoButton = document.getElementById('info-button');
+    const modalBackdrop = document.getElementById('about-modal-backdrop');
+    const closeModalButton = document.getElementById('close-modal-button');
+
+    // When the user clicks the 'i' button, show the modal
+    infoButton.addEventListener('click', () => {
+        modalBackdrop.classList.add('modal-visible');
+    });
+
+    // When the user clicks the 'x' span, hide the modal
+    closeModalButton.addEventListener('click', () => {
+        modalBackdrop.classList.remove('modal-visible');
+    });
+
+    // When the user clicks anywhere on the dark backdrop, also hide the modal
+    modalBackdrop.addEventListener('click', (event) => {
+        // We only close it if they clicked the backdrop itself, not the content window
+        if (event.target === modalBackdrop) {
+            modalBackdrop.classList.remove('modal-visible');
+        }
+    });
+</script>
+</body>
+</html>

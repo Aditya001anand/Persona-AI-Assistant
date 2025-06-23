@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personality_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body class="chat-body" style="background-image: url('{{ url_for('static', filename=background_image) }}');">
+
+    <div class="chat-container">
+        <header class="chat-header">
+    <a href="/" class="home-logo-link">
+        <img src="{{ url_for('static', filename='images/persona_logo.png') }}" alt="Home">
+    </a>
+
+    <h1 style="color: {{ theme_color }};">{{ personality_name }}</h1>
+</header>
+
+        <main id="chat-history" class="chat-history">
+            </main>
+
+        <div id="typing-indicator" class="typing-indicator" style="display: none;">
+            <span></span><span></span><span></span>
+        </div>
+
+        <footer class="chat-footer">
+            <form id="message-form">
+                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button type="submit" style="background-color: {{ theme_color }};">Send</button>
+            </form>
+        </footer>
+    </div>
+<script>
+    // Get references to our HTML elements
+    const messageForm = document.getElementById('message-form');
+    const userInput = document.getElementById('user-input');
+    const chatHistory = document.getElementById('chat-history');
+    const typingIndicator = document.getElementById('typing-indicator');
+
+    // Listen for when the user submits the form
+    messageForm.addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+        const userMessage = userInput.value.trim();
+        if (userMessage === '') return; 
+
+        appendMessage('user', userMessage);
+        userInput.value = ''; 
+        typingIndicator.style.display = 'flex';
+
+        try {
+            const response = await fetch('/get_response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            if (!response.ok) { throw new Error('Network response was not ok.'); }
+
+            const data = await response.json();
+            // Pass the raw text to appendMessage for the data attribute
+            appendMessage('ai', data.response);
+
+        } catch (error) {
+            console.error('Error:', error);
+            appendMessage('ai', 'Sorry, I ran into an error. Please try again.');
+        } finally {
+            typingIndicator.style.display = 'none'; 
+        }
+    });
+
+    function appendMessage(sender, text) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', `${sender}-message`);
+
+        let avatarUrl = (sender === 'user') ? "{{ url_for('static', filename='avatars/user_avatar.png') }}" : "{{ url_for('static', filename=avatar_image) }}";
+        const avatar = `<img src="${avatarUrl}" alt="${sender} avatar" class="avatar">`;
+
+        const messageTextContainer = document.createElement('div');
+        messageTextContainer.classList.add('message-text');
+
+        // This logic correctly handles code blocks and plain text
+        let processedText = text;
+        if (processedText.includes('```')) {
+            processedText = processedText.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                const escapedCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<div class="code-block-container"><button class="copy-button">Copy</button><pre><code class="language-${lang || 'plaintext'}">${escapedCode}</code></pre></div>`;
+            });
+        }
+        const parts = processedText.split(/(<div class="code-block-container">[\s\S]*?<\/div>)/g);
+        let finalHtml = '';
+        for (const part of parts) {
+            if (part.startsWith('<div class="code-block-container">')) {
+                finalHtml += part;
+            } else {
+                finalHtml += part.replace(/\n/g, '<br>');
+            }
+        }
+        messageTextContainer.innerHTML = finalHtml;
+        
+        // --- NEW: Add feedback buttons ONLY for AI messages ---
+        if (sender === 'ai') {
+            const feedbackContainer = document.createElement('div');
+            feedbackContainer.classList.add('feedback-container');
+            feedbackContainer.dataset.message = text; // Store raw message for logging
+            feedbackContainer.innerHTML = `
+                <button class="feedback-button" data-feedback="good" title="Good response">👍</button>
+                <button class="feedback-button" data-feedback="bad" title="Bad response">👎</button>
+            `;
+            messageTextContainer.appendChild(feedbackContainer);
+        }
+
+        if (sender === 'user') {
+            messageElement.appendChild(messageTextContainer);
+            messageElement.insertAdjacentHTML('beforeend', avatar);
+        } else {
+            messageElement.insertAdjacentHTML('afterbegin', avatar);
+            messageElement.appendChild(messageTextContainer);
+        }
+        
+        chatHistory.appendChild(messageElement);
+
+        // Add event listeners and highlighting after the element is in the DOM
+        messageElement.querySelectorAll('.copy-button').forEach(button => { /* ... copy logic ... */ });
+        messageElement.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+   // This is the NEW version with the thank you message
+chatHistory.addEventListener('click', function(event) {
+    // Check if a feedback button was clicked
+    if (event.target.classList.contains('feedback-button')) {
+        const button = event.target;
+        const feedbackContainer = button.parentElement;
+        
+        // Prevent double-voting
+        if (feedbackContainer.classList.contains('voted')) return;
+        feedbackContainer.classList.add('voted');
+
+        const feedbackValue = button.dataset.feedback;
+        const messageText = feedbackContainer.dataset.message;
+
+        // Log feedback to the backend (this part is unchanged)
+        fetch('/submit_feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: messageText, feedback: feedbackValue })
+        });
+
+        // Provide visual confirmation on the button
+        button.classList.add('selected');
+
+        // --- NEW: Create and show the "Thank You" message ---
+        const thanksMsg = document.createElement('span');
+        thanksMsg.className = 'feedback-thanks-message';
+        thanksMsg.textContent = 'Thanks for your feedback!';
+        feedbackContainer.appendChild(thanksMsg);
+
+        // Make the message disappear after a few seconds
+        setTimeout(() => {
+            thanksMsg.classList.add('fade-out');
+            // Remove the element from the page completely after the animation finishes
+            setTimeout(() => {
+                thanksMsg.remove();
+            }, 500); // 500ms matches the animation duration
+        }, 2000); // Message stays for 2 seconds (2000ms)
+    }
+});
+</script></body>
+</html>
