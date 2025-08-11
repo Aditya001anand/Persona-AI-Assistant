@@ -1,0 +1,22 @@
+# Environment variables - DO NOT UPLOAD
+.env
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+
+# Log files
+*.log
+feedback_log.txt
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
